@@ -64,13 +64,21 @@ public class AdaptiveCardManager extends BotManagerBase {
                     cardJson.add("actions", showCardActions);
                 }
 
-                AdaptiveCardMessage message = AdaptiveCardMessage.CreateAdaptiveCardMessage(chatId, to, cardJson);
+                AdaptiveCardMessage.OutgoingAdaptiveCardMessageBuilder builder =
+                        AdaptiveCardMessage.OutgoingAdaptiveCardMessageBuilder.init(chatId)
+                                .setTo(to)
+                                .setCard(cardJson);
+
                 if (!suggestedResponses.isEmpty()) {
-                    message.keyboards = Collections.singletonList(SRKeyboard.createSRKeyboard(suggestedResponses));
+                    builder.setKeyboards(Collections.singletonList(SRKeyboard.createSRKeyboard(suggestedResponses)));
                 }
+
+                AdaptiveCardMessage message = builder.build();
                 messagesToSend.add(message);
             } else {
-                messagesToSend.add(AdaptiveCardMessage.CreateAdaptiveCardMessage(chatId, to, attachment.content));
+                messagesToSend.add(AdaptiveCardMessage.OutgoingAdaptiveCardMessageBuilder.init(chatId)
+                        .setTo(to)
+                        .setCard(attachment.content).build());
             }
         }
 

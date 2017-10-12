@@ -6,11 +6,17 @@ import java.util.List;
 
 public interface IMessage {
     String getChatId();
+
     String getId();
+
     String getType();
+
     String getFrom();
+
     String getTo();
+
     String getMention();
+
     long getDelay();
 
     JsonElement getMetadata();

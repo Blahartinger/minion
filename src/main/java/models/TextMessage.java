@@ -2,10 +2,34 @@ package models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TextMessage extends Message {
-    public String body;
+import java.util.List;
+
+public class TextMessage extends Message implements ITextMessage {
+    protected String body;
     @SerializedName("markdown_body")
-    public String markdownBody;
+    protected String markdownBody;
+    protected long typeTime;
+
+    // Needed for gson
+    public TextMessage() {
+    }
+
+    protected TextMessage(OutgoingTextMessageBuilder builder) {
+        super(builder);
+        this.body = builder.body;
+        this.markdownBody = builder.markdownBody;
+        this.type = "text";
+    }
+
+    @Override
+    public String getBody() {
+        return body;
+    }
+
+    @Override
+    public String getMarkdownBody() {
+        return markdownBody;
+    }
 
     public static class OutgoingTextMessageBuilder
             extends Message.OutgoingMessageBuilder<OutgoingTextMessageBuilder> {
@@ -13,22 +37,22 @@ public class TextMessage extends Message {
         protected String body;
         protected String markdownBody;
 
-        public static OutgoingTextMessageBuilder init(String chatId) {
-            return new OutgoingTextMessageBuilder(chatId);
-        }
-
         private OutgoingTextMessageBuilder(String chatId) {
             super(chatId);
         }
 
+        public static OutgoingTextMessageBuilder init(String chatId) {
+            return new OutgoingTextMessageBuilder(chatId);
+        }
+
         public OutgoingTextMessageBuilder setBody(String body) {
             this.body = body;
-            return this;
+            return getThis();
         }
 
         public OutgoingTextMessageBuilder setMarkdownBody(String markdownBody) {
             this.markdownBody = markdownBody;
-            return this;
+            return getThis();
         }
 
         @Override
@@ -41,14 +65,5 @@ public class TextMessage extends Message {
         }
     }
 
-    // Needed for gson
-    public TextMessage() {
-    }
 
-    protected TextMessage(OutgoingTextMessageBuilder builder) {
-        super(builder);
-        this.body = builder.body;
-        this.markdownBody = builder.markdownBody;
-        this.type = "text";
-    }
 }

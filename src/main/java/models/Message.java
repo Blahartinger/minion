@@ -5,15 +5,15 @@ import com.google.gson.JsonElement;
 import java.util.List;
 
 public class Message implements IMessage {
-    public String chatId;
-    public String id;
-    public String type;
-    public String from;
-    public String to;
-    public JsonElement metadata;
-    public List<SRKeyboard> keyboards;
-    public String mention;
-    public long delay;
+    protected String chatId;
+    protected String id;
+    protected String type;
+    protected String from;
+    protected String to;
+    protected JsonElement metadata;
+    protected List<SRKeyboard> keyboards;
+    protected String mention;
+    protected long delay;
     protected String chatType;
     protected boolean readReceiptRequested;
     protected long timestamp;
