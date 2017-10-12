@@ -9,8 +9,13 @@ public class LinkMessage extends Message implements ILinkMessage {
     public String layoutType; // article or overlay
     public LinkMessageAction action;
 
+    // Needed for gson
+    public LinkMessage() {
+    }
+
     public LinkMessage(OutgoingLinkMessageBuilder outgoingLinkMessageBuilder) {
         super(outgoingLinkMessageBuilder);
+        type = "link";
         url = outgoingLinkMessageBuilder.url;
         picUrl = outgoingLinkMessageBuilder.picUrl;
         noForward = outgoingLinkMessageBuilder.noForward;

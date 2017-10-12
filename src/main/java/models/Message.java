@@ -1,6 +1,7 @@
 package models;
 
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
@@ -13,10 +14,10 @@ public class Message implements IMessage {
     protected JsonElement metadata;
     protected List<SRKeyboard> keyboards;
     protected String mention;
-    protected long delay;
+    protected Long delay;
     protected String chatType;
-    protected boolean readReceiptRequested;
-    protected long timestamp;
+    protected Boolean readReceiptRequested;
+    protected Long timestamp;
     protected List<String> participants;
 
     // Needed for gson
@@ -181,8 +182,8 @@ public class Message implements IMessage {
 
         protected String from;
         protected String chatType;
-        protected boolean readReceiptRequested;
-        protected long timestamp;
+        protected Boolean readReceiptRequested;
+        protected Long timestamp;
         protected List<String> participants;
 
         public IncomingMessageBuilder(String chatId) {

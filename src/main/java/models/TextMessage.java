@@ -8,7 +8,7 @@ public class TextMessage extends Message implements ITextMessage {
     protected String body;
     @SerializedName("markdown_body")
     protected String markdownBody;
-    protected long typeTime;
+    protected Long typeTime;
 
     // Needed for gson
     public TextMessage() {
