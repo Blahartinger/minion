@@ -7,16 +7,6 @@ public class TextMessage extends Message {
     @SerializedName("markdown_body")
     public String markdownBody;
 
-//    public static TextMessage CreateTextMessage(String chatId, String to, String body, String markdownBody) {
-//        TextMessage msg = new TextMessage();
-//        msg.body = body;
-//        msg.markdownBody = markdownBody;
-//        msg.chatId = chatId;
-//        msg.to = to;
-//
-//        return msg;
-//    }
-
     public static class OutgoingTextMessageBuilder
             extends Message.OutgoingMessageBuilder<OutgoingTextMessageBuilder> {
 
