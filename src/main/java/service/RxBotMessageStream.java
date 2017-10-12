@@ -1,4 +1,4 @@
-package managers;
+package service;
 
 import models.IMessage;
 import models.Message;
@@ -105,19 +105,19 @@ public class RxBotMessageStream implements IBotMessageStream {
 
         _outgoingMessageSteam
                 .asObservable()
-                .flatMap(new Func1<IMessage, Observable<MessageManager.BotTransaction>>() {
+                .flatMap(new Func1<IMessage, Observable<BasicMessageTransport.BotTransaction>>() {
                     @Override
-                    public Observable<MessageManager.BotTransaction> call(IMessage message) {
+                    public Observable<BasicMessageTransport.BotTransaction> call(IMessage message) {
                         log.info("outgoing.flatmap.sendMessages()");
                         try {
-                            return Observable.just(_botService.getMessageManager().sendMessage(message));
+                            return Observable.just(_botService.getMessageTransport().sendMessage(message));
                         } catch (IOException e) {
                             log.info("outgoing.flatmap.sendMessage::throw::Error");
                             return Observable.error(e);
                         }
                     }
                 })
-                .subscribe(new Observer<MessageManager.BotTransaction>() {
+                .subscribe(new Observer<BasicMessageTransport.BotTransaction>() {
                     @Override
                     public void onCompleted() {
                         log.info("outgoing.onCompleted()");
@@ -129,7 +129,7 @@ public class RxBotMessageStream implements IBotMessageStream {
                     }
 
                     @Override
-                    public void onNext(MessageManager.BotTransaction botTransaction) {
+                    public void onNext(BasicMessageTransport.BotTransaction botTransaction) {
                         log.info("outgoing.onNext()");
                         botTransaction.responseCode()
                                 .subscribe(new Action1<Integer>() {

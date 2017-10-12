@@ -1,13 +1,10 @@
-package managers;
+package service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import models.IMessage;
 import models.MessagesEnvelope;
-import models.TextMessage;
-import models.internal.AdaptiveCardMessage;
 import rx.Single;
 
 import java.io.IOException;
@@ -26,19 +23,23 @@ import java.util.logging.Logger;
 //import com.mashape.unirest.http.Unirest;
 //import com.mashape.unirest.http.exceptions.UnirestException;
 
-public class MessageManager extends BotManagerBase {
+public class BasicMessageTransport implements IMessageTransport {
 
-    private static final Logger log = Logger.getLogger(MessageManager.class.getName());
+    private static final Logger log = Logger.getLogger(BasicMessageTransport.class.getName());
     private static final String KIK_URL_STRING = "https://api.kik.com/v1/message";
 
-    public MessageManager(IServletBotConfig config, Gson gson) {
-        super(config, gson);
+    private IBotAuthProvider _botAuthProvider;
+
+    public BasicMessageTransport(IServletBotConfig config, IBotAuthProvider botAuthProvider) {
+        _botAuthProvider = botAuthProvider;
     }
 
+    @Override
     public BotTransaction sendMessage(IMessage message) throws IOException {
         return sendMessages(new ArrayList<IMessage>(Collections.singletonList(message)));
     }
 
+    @Override
     public BotTransaction sendMessages(List<IMessage> messages) throws IOException {
 
         Gson gson = new GsonBuilder().create();
@@ -49,7 +50,7 @@ public class MessageManager extends BotManagerBase {
         URL url = new URL(KIK_URL_STRING);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("Content-Type", "application/json; charset=utf8");
-        addBasicAuth(conn);
+        _botAuthProvider.addBasicAuth(conn);
 
         conn.setDoOutput(true);
         try {

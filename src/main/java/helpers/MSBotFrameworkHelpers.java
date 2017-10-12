@@ -1,14 +1,11 @@
-package managers.internal;
+package helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import managers.BotManagerBase;
-import managers.IServletBotConfig;
-import managers.MessageManager;
+import experimental.models.AdaptiveCardMessage;
 import models.*;
-import models.internal.AdaptiveCardMessage;
 import utils.FileUtils;
 
 import java.io.IOException;
@@ -17,24 +14,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class AdaptiveCardManager extends BotManagerBase {
-    private static final Logger log = Logger.getLogger(AdaptiveCardManager.class.getName());
+public class MSBotFrameworkHelpers {
+    private static final Logger log = Logger.getLogger(MSBotFrameworkHelpers.class.getName());
+    private Gson _gson;
 
-    private MessageManager _messageManager;
-
-    public AdaptiveCardManager(MessageManager messageManager, IServletBotConfig config, Gson gson) {
-        super(config, gson);
-        _messageManager = messageManager;
+    public MSBotFrameworkHelpers(Gson gson) {
+        _gson = gson;
     }
 
-    public static List<IMessage> convertMSBotFrameworkMessageToMessages(MSBotFrameworkMessage msBotFrameworkMessage, String chatId, String to, boolean sendActionsAsSuggestedResponses) {
+    public List<IMessage> convertMSBotFrameworkMessageToMessages(MSBotFrameworkMessage msBotFrameworkMessage, String chatId, String to, boolean sendActionsAsSuggestedResponses) {
         List<IMessage> messagesToSend = new ArrayList<>();
 
         if (msBotFrameworkMessage.text != null) {
             messagesToSend.add(TextMessage.OutgoingTextMessageBuilder.init(chatId).setTo(to).setBody(msBotFrameworkMessage.text).build());
         }
 
-        for (MSBotFrameworkMessageAttachment attachment : msBotFrameworkMessage.attachments) {
+        for (MSBotFrameworkMessage.MSBotFrameworkMessageAttachment attachment : msBotFrameworkMessage.attachments) {
             if (sendActionsAsSuggestedResponses) {
 
                 JsonObject cardJson = attachment.content;
@@ -85,25 +80,26 @@ public class AdaptiveCardManager extends BotManagerBase {
         return messagesToSend;
     }
 
-    public void sendMSBotFrameworkMessage(MSBotFrameworkMessage msBotFrameworkMessage, String chatId, String to, boolean sendActionsAsSuggestedResponses) throws IOException {
-        _messageManager.sendMessages(convertMSBotFrameworkMessageToMessages(msBotFrameworkMessage, chatId, to, sendActionsAsSuggestedResponses));
-    }
-
-    public void sendMSBotFrameWorkMessageFromResourceFile(String filename, String chatId, String to, boolean sendActionsAsSuggestedResponses) throws IOException {
-        String wildlifeJsonString = FileUtils.resourceFileToString(filename);
-        MSBotFrameworkMessage msBotFrameworkMessage = gsonSharedInstance().fromJson(wildlifeJsonString, MSBotFrameworkMessage.class);
-        log.info("msBotFrameworkMessage.text: " + msBotFrameworkMessage.text);
-        log.info("msBotFrameworkMessage.type: " + msBotFrameworkMessage.type);
-        log.info("msBotFrameworkMessage.attachments: " + msBotFrameworkMessage.attachments);
-        sendMSBotFrameworkMessage(msBotFrameworkMessage, chatId, to, sendActionsAsSuggestedResponses);
-    }
-
     public List<IMessage> messagesFromMSBotFrameWorkMessageFromResourceFile(String filename, String chatId, String to, boolean sendActionsAsSuggestedResponses) throws IOException {
         String wildlifeJsonString = FileUtils.resourceFileToString(filename);
-        MSBotFrameworkMessage msBotFrameworkMessage = gsonSharedInstance().fromJson(wildlifeJsonString, MSBotFrameworkMessage.class);
+        MSBotFrameworkMessage msBotFrameworkMessage = _gson.fromJson(wildlifeJsonString, MSBotFrameworkMessage.class);
         log.info("msBotFrameworkMessage.text: " + msBotFrameworkMessage.text);
         log.info("msBotFrameworkMessage.type: " + msBotFrameworkMessage.type);
         log.info("msBotFrameworkMessage.attachments: " + msBotFrameworkMessage.attachments);
         return convertMSBotFrameworkMessageToMessages(msBotFrameworkMessage, chatId, to, sendActionsAsSuggestedResponses);
+    }
+
+    public static class MSBotFrameworkMessage {
+        public String type;
+        public String inputHint;
+        public String speak;
+        public String text;
+        public String attachmentLayout;
+        public List<MSBotFrameworkMessageAttachment> attachments;
+
+        public static class MSBotFrameworkMessageAttachment {
+            public String contentType;
+            public JsonObject content;
+        }
     }
 }

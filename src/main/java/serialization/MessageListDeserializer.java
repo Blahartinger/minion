@@ -2,8 +2,8 @@ package serialization;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import experimental.models.AdaptiveCardMessage;
 import models.*;
-import models.internal.AdaptiveCardMessage;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -14,7 +14,8 @@ public class MessageListDeserializer implements JsonDeserializer<List<IMessage>>
 
     private static final Logger log = Logger.getLogger(MessageListDeserializer.class.getName());
 
-    public static Type MESSAGE_LIST_TYPE = new TypeToken<List<IMessage>>() {}.getType();
+    public static Type MESSAGE_LIST_TYPE = new TypeToken<List<IMessage>>() {
+    }.getType();
 
     private Gson gson = new Gson();
 
@@ -28,15 +29,18 @@ public class MessageListDeserializer implements JsonDeserializer<List<IMessage>>
             MessageType messageType = MessageType.fromString(typeString);
             log.info("messageType: " + messageType);
             switch (messageType) {
-                case TEXT: {
+                case TEXT:
                     return gson.fromJson(jsonElement, TextMessage.class);
-                }
-                case START_CHATTING: {
+                case START_CHATTING:
                     return gson.fromJson(jsonElement, StartChattingMessage.class);
-                }
-                case ADAPTIVE_CARD: {
+                case ADAPTIVE_CARD:
                     return gson.fromJson(jsonElement, AdaptiveCardMessage.class);
-                }
+                case LINK:
+                    return gson.fromJson(jsonElement, LinkMessage.class);
+                case PICTURE:
+                    return gson.fromJson(jsonElement, PictureMessage.class);
+                case VIDEO:
+                    return gson.fromJson(jsonElement, VideoMessage.class);
             }
         }
         return null;

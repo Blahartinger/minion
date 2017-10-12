@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum MessageType {
     UNKNOWN("unknown"),
     TEXT("text"),
-    LINK_("link"),
+    LINK("link"),
     PICTURE("picture"),
     VIDEO("video"),
     START_CHATTING("start-chatting"),

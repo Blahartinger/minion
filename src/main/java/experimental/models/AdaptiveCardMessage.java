@@ -1,8 +1,7 @@
-package models.internal;
+package experimental.models;
 
 import com.google.gson.JsonObject;
 import models.Message;
-import models.TextMessage;
 
 public class AdaptiveCardMessage extends Message {
     public JsonObject card;
@@ -14,7 +13,7 @@ public class AdaptiveCardMessage extends Message {
     }
 
     public static class OutgoingAdaptiveCardMessageBuilder
-            extends Message.OutgoingMessageBuilder<OutgoingAdaptiveCardMessageBuilder> {
+            extends OutgoingMessageBuilder<OutgoingAdaptiveCardMessageBuilder> {
 
         protected JsonObject card;
 

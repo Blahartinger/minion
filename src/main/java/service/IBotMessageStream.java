@@ -1,4 +1,4 @@
-package managers;
+package service;
 
 import models.IMessage;
 
