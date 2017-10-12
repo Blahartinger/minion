@@ -35,19 +35,6 @@ public class MessageManager extends BotManagerBase {
         super(config, gson);
     }
 
-    public void sendTextMessage(String body, String markDownBody, String chatId, String to) throws IOException {
-//        sendMessage(TextMessage.CreateTextMessage(chatId, to, body, markDownBody));
-        sendMessage(TextMessage.OutgoingTextMessageBuilder.init(chatId)
-                .setTo(to)
-                .setBody(body)
-                .setMarkdownBody(markDownBody)
-                .build());
-    }
-
-    public void sendAdaptiveCardMessage(JsonObject card, String chatId, String to) throws IOException {
-        sendMessage(AdaptiveCardMessage.CreateAdaptiveCardMessage(chatId, to, card));
-    }
-
     public BotTransaction sendMessage(IMessage message) throws IOException {
         return sendMessages(new ArrayList<IMessage>(Collections.singletonList(message)));
     }

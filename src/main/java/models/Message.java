@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 
 import java.util.List;
 
-public class Message implements IMessage{
+public class Message implements IMessage {
     public String chatId;
     public String id;
     public String type;
@@ -12,27 +12,39 @@ public class Message implements IMessage{
     public String to;
     public JsonElement metadata;
     public List<SRKeyboard> keyboards;
+    public String mention;
+    public long delay;
+    protected String chatType;
+    protected boolean readReceiptRequested;
+    protected long timestamp;
+    protected List<String> participants;
 
     // Needed for gson
-    public Message() {}
+    public Message() {
+    }
 
     protected Message(Builder builder) {
-        chatId  = builder.chatId;
+        chatId = builder.chatId;
         id = builder.id;
         type = builder.type;
         metadata = builder.metadata;
         keyboards = builder.keyboards;
+        mention = builder.mention;
     }
 
     protected Message(OutgoingMessageBuilder outgoingMessageBuilder) {
-        this((Builder)outgoingMessageBuilder);
+        this((Builder) outgoingMessageBuilder);
         to = outgoingMessageBuilder.to;
-
+        delay = outgoingMessageBuilder.delay;
     }
 
-    public Message(IncomingMessageBuilder incomingMessageBuilder) {
-        this((Builder)incomingMessageBuilder);
+    protected Message(IncomingMessageBuilder incomingMessageBuilder) {
+        this((Builder) incomingMessageBuilder);
         from = incomingMessageBuilder.from;
+        chatType = incomingMessageBuilder.chatType;
+        readReceiptRequested = incomingMessageBuilder.readReceiptRequested;
+        timestamp = incomingMessageBuilder.timestamp;
+        participants = incomingMessageBuilder.participants;
     }
 
     @Override
@@ -60,12 +72,53 @@ public class Message implements IMessage{
         return to;
     }
 
+    @Override
+    public String getMention() {
+        return mention;
+    }
+
+    @Override
+    public long getDelay() {
+        return delay;
+    }
+
+    @Override
+    public JsonElement getMetadata() {
+        return metadata;
+    }
+
+    @Override
+    public List<SRKeyboard> getKeyboards() {
+        return keyboards;
+    }
+
+    @Override
+    public String getChatType() {
+        return chatType;
+    }
+
+    @Override
+    public boolean isReadReceiptRequested() {
+        return readReceiptRequested;
+    }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public List<String> getParticipants() {
+        return participants;
+    }
+
     public static abstract class Builder<T extends Builder<T>> {
         protected String chatId;
         protected String id;
         protected String type;
         protected JsonElement metadata;
         protected List<SRKeyboard> keyboards;
+        protected String mention;
 
         public Builder(String chatId) {
             this.chatId = chatId;
@@ -91,6 +144,11 @@ public class Message implements IMessage{
             return getThis();
         }
 
+        public T setMention(String mention) {
+            this.mention = mention;
+            return getThis();
+        }
+
         public abstract T getThis();
     }
 
@@ -98,6 +156,7 @@ public class Message implements IMessage{
             extends Message.Builder<OutgoingMessageBuilder<T>> {
 
         protected String to;
+        protected long delay;
 
         public OutgoingMessageBuilder(String chatId) {
             super(chatId);
@@ -105,6 +164,11 @@ public class Message implements IMessage{
 
         public T setTo(String to) {
             this.to = to;
+            return getThis();
+        }
+
+        public T setDelay(long delay) {
+            this.delay = delay;
             return getThis();
         }
 
@@ -116,6 +180,10 @@ public class Message implements IMessage{
             extends Message.Builder<IncomingMessageBuilder<T>> {
 
         protected String from;
+        protected String chatType;
+        protected boolean readReceiptRequested;
+        protected long timestamp;
+        protected List<String> participants;
 
         public IncomingMessageBuilder(String chatId) {
             super(chatId);
@@ -126,6 +194,25 @@ public class Message implements IMessage{
             return getThis();
         }
 
+        public T setChatType(String chatType) {
+            this.chatType = chatType;
+            return getThis();
+        }
+
+        public T setReadRecieptRequested(boolean readReceiptRequested) {
+            this.readReceiptRequested = readReceiptRequested;
+            return getThis();
+        }
+
+        public T setTimestamp(long timestamp) {
+            this.timestamp = timestamp;
+            return getThis();
+        }
+
+        public T setParticipants(List<String> participants) {
+            this.participants = participants;
+            return getThis();
+        }
 
         @Override
         public abstract T getThis();
