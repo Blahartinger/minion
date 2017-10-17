@@ -53,7 +53,25 @@ public class RxBotMessageStream implements IBotMessageStream {
 
     private IBotService _botService;
 
-    public RxBotMessageStream(IBotService botService) {
+    public static class Builder {
+        private final IBotService _botService;
+
+        public Builder(IBotService botService) {
+            _botService = botService;
+        }
+
+        public static Builder init(IBotService botService) {
+            return new Builder(botService);
+        }
+
+        public RxBotMessageStream build() {
+            RxBotMessageStream stream = new RxBotMessageStream(_botService);
+
+            return stream;
+        }
+    }
+
+    private RxBotMessageStream(IBotService botService) {
 
         _botService = botService;
 
@@ -65,7 +83,6 @@ public class RxBotMessageStream implements IBotMessageStream {
                     @Override
                     public void onCompleted() {
                         log.info("incoming.onCompleted()");
-
                     }
 
                     @Override
