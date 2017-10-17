@@ -2,6 +2,7 @@ package service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import models.MessagesEnvelope;
 import serialization.MessageListDeserializer;
 
 public class BotService implements IBotService {
@@ -22,6 +23,11 @@ public class BotService implements IBotService {
     @Override
     public Gson getGson() {
         return _gson;
+    }
+
+    @Override
+    public MessagesEnvelope parseMessagesEnvelope(String jsonString) {
+        return getGson().fromJson(jsonString, MessagesEnvelope.class);
     }
 
     public static class Builder {
@@ -51,7 +57,7 @@ public class BotService implements IBotService {
         private Gson createDefaultGsonInstance() {
             return new GsonBuilder()
                     .registerTypeAdapter(MessageListDeserializer.MESSAGE_LIST_TYPE, new MessageListDeserializer())
-                    .create();
+                    .create() ;
         }
 
         public BotService build() {
