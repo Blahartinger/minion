@@ -2,8 +2,6 @@ package models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class TextMessage extends Message implements ITextMessage {
     protected String body;
     @SerializedName("markdown_body")

@@ -1,7 +1,6 @@
 package models;
 
 import com.google.gson.JsonElement;
-import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
